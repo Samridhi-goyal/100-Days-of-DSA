@@ -3,22 +3,25 @@ The integer division should truncate toward zero.
 You may assume that the given expression is always valid. All intermediate results will be in the range of [-231, 231 - 1].
 Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().*/
 
- #include <stdlib.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 int calculate(char* s) {
-    int stack[10000];
+    int n = 0;
+    while(s[n] != '\0') n++;
+
+    int* stack = (int*)malloc(sizeof(int) * n);
     int top = -1;
 
     int num = 0;
     char op = '+';
 
-    for(int i = 0; s[i] != '\0'; i++) {
+    for(int i = 0; i < n; i++) {
         if(isdigit(s[i])) {
             num = num * 10 + (s[i] - '0');
         }
 
-        if((!isdigit(s[i]) && s[i] != ' ') || s[i+1] == '\0') {
+        if((!isdigit(s[i]) && s[i] != ' ') || i == n - 1) {
             if(op == '+') stack[++top] = num;
             else if(op == '-') stack[++top] = -num;
             else if(op == '*') stack[top] = stack[top] * num;
@@ -34,5 +37,6 @@ int calculate(char* s) {
         result += stack[i];
     }
 
+    free(stack);
     return result;
 }
